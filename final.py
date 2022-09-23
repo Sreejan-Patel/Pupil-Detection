@@ -140,8 +140,8 @@ def check_start(channel):
     return status
 
 def get_values(channel,id):
-    str=channel.get_field_last(field=id)
-    dic=json.loads(str)
+    strr=channel.get_field_last(field=id)
+    dic=json.loads(strr)
     field = "field"+str(id)
     Values=dic[field]
     value = json.loads(Values)
