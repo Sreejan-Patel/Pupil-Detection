@@ -217,12 +217,19 @@ if __name__ == "__main__":
                         time.sleep(5)
                     
                     time.sleep(10)
+            
+            diameter_dic_1 = {"red": diameter_1}
+            diameter_dic_2 = {"green": diameter_2}
+            diameter_dic_3 = {"blue": diameter_3}
+            diameter_dic_4 = {"yellow": diameter_4}
+            diameter_dic_5 = {"white": diameter_5}
+            
                     
-            encrypt_diameter_1 = encrypt(str(diameter_1),key,iv)
-            encrypt_diameter_2 = encrypt(str(diameter_2),key,iv)
-            encrypt_diameter_3 = encrypt(str(diameter_3),key,iv)
-            encrypt_diameter_4 = encrypt(str(diameter_4),key,iv)
-            encrypt_diameter_5 = encrypt(str(diameter_5),key,iv)
+            encrypt_diameter_1 = encrypt(str(diameter_dic_1),key,iv)
+            encrypt_diameter_2 = encrypt(str(diameter_dic_2),key,iv)
+            encrypt_diameter_3 = encrypt(str(diameter_dic_3),key,iv)
+            encrypt_diameter_4 = encrypt(str(diameter_dic_4),key,iv)
+            encrypt_diameter_5 = encrypt(str(diameter_dic_5),key,iv)
             
             
             response = write_channel.update({'field1':0, 'field3':name, 'field4':str(encrypt_diameter_1), 'field5':str(encrypt_diameter_2), 'field6':str(encrypt_diameter_3), 'field7':str(encrypt_diameter_4), 'field8':str(encrypt_diameter_5)})
