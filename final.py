@@ -128,9 +128,9 @@ def pupilDiameter(color, duration):
         print("Error")
         
 def encrypt(data):
-        data= pad(data.encode(),16)
-        cipher = AES.new(key.encode('utf-8'),AES.MODE_CBC,iv)
-        return base64.b64encode(cipher.encrypt(data))
+    data= pad(data.encode(),16)
+    cipher = AES.new(key.encode('utf-8'),AES.MODE_CBC,iv)
+    return base64.b64encode(cipher.encrypt(data))
         
 
 def check_start(channel):
@@ -232,7 +232,7 @@ if __name__ == "__main__":
             encrypt_diameter_5 = encrypt(str(diameter_dic_5))
             
             
-            response = write_channel.update({'field1':0, 'field3':name, 'field4':str(encrypt_diameter_1), 'field5':str(encrypt_diameter_2), 'field6':str(encrypt_diameter_3), 'field7':str(encrypt_diameter_4), 'field8':str(encrypt_diameter_5)})
+            response = write_channel.update({'field1':0, 'field3':name, 'field4':encrypt_diameter_1.decode("utf-8", "ignore"), 'field5':encrypt_diameter_2.decode("utf-8", "ignore"), 'field6':encrypt_diameter_3.decode("utf-8", "ignore"), 'field7':encrypt_diameter_4.decode("utf-8", "ignore"), 'field8':encrypt_diameter_5.decode("utf-8", "ignore")})
          
                     
                 
