@@ -1,4 +1,7 @@
 import thingspeak
+import base64 
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad,unpad
 import json
 import time, sys
 import RPi.GPIO as GPIO
@@ -10,6 +13,14 @@ greenPin = 22 #Should be set in the
 bluePin = 37  #GPIO.BOARD format
 
 hz = 75
+
+# KEY
+key = 'sreehaachapra123' #16 char for AES128
+
+#FIX IV
+iv = 'jansarannathi123' #16 char for AES128
+
+
 
 GPIO.setmode(GPIO.BOARD)
 
@@ -75,10 +86,12 @@ def pupilDiameter(color, duration):
                             
                             if(i[2]>0 and i[2]<155):
                                 cv2.circle(roi_color2,(int(i[0]),int(i[1])),int(i[2]),(0,0,255),1)
-                                cv2.putText(img,"Pupil Pos:",(450,30), font, 1,(0,0,255),2,cv2.LINE_AA)
-                                cv2.putText(img,"X "+str(int(i[0]))+" Y "+str(int(i[1])),(430,60), font, 1,(0,0,255),2,cv2.LINE_AA)
+                                # cv2.putText(img,"Pupil Pos:",(450,30), font, 1,(0,0,255),2,cv2.LINE_AA)
+                                # cv2.putText(img,"X "+str(int(i[0]))+" Y "+str(int(i[1])),(430,60), font, 1,(0,0,255),2,cv2.LINE_AA)
                                 d = (int(i[2])*2.0)
                                 dmm = 1/(25.4/d)
+                                dmm = float(int(dmm*1000))
+                                dmm /= 1000
                                 if(color == 1):
                                     diameter_1.append(dmm)
                                 elif(color == 2):
@@ -92,10 +105,9 @@ def pupilDiameter(color, duration):
                                 
                                 
                                     
-                                cv2.putText(img,str('{0:.2f}'.format(dmm))+"mm",(10,60), font, 1,(0,0,255),2,cv2.LINE_AA)
+                                # cv2.putText(img,str('{0:.2f}'.format(dmm))+"mm",(10,60), font, 1,(0,0,255),2,cv2.LINE_AA)
                                 cv2.circle(roi_color2,(int(i[0]),int(i[1])),2,(0,0,255),3)
                     except Exception as e:
-                        #print(e)
                         pass
                     
             else:
@@ -104,7 +116,7 @@ def pupilDiameter(color, duration):
                     if blink==True:
                          cv2.putText(img,"Blink",(10,90), font, 1,(0,0,255),2,cv2.LINE_AA)
                 a="Eye Close" 
-                cv2.putText(img,a,(10,30), font, 1,(0,0,255),2,cv2.LINE_AA)
+                # cv2.putText(img,a,(10,30), font, 1,(0,0,255),2,cv2.LINE_AA)
                 
             cv2.imshow('img',img)
             k = cv2.waitKey(30) & 0xff
@@ -115,6 +127,11 @@ def pupilDiameter(color, duration):
     except:
         print("Error")
         
+def encrypt(data,key,iv):
+        data= pad(data.encode(),16)
+        cipher = AES.new(key.encode('utf-8'),AES.MODE_CBC,iv)
+        return base64.b64encode(cipher.encrypt(data))
+        
 
 def check_start(channel):
     str=channel.get_field_last(field=1)
@@ -122,10 +139,10 @@ def check_start(channel):
     status=int(dic["field1"])
     return status
 
-def get_values(channel):
-    str=channel.get_field_last(field=2)
+def get_values(channel,id):
+    str=channel.get_field_last(field=id)
     dic=json.loads(str)
-    Values=dic["field2"]
+    Values=dic["field"+str(id)]
     value = json.loads(Values)
     return value
 
@@ -165,6 +182,7 @@ if __name__ == "__main__":
             diameter_3 = []
             diameter_4 = []
             diameter_5 = []
+            name = ''
             check = check_start(write_channel)
             if(check == 0):
                 time.sleep(15)
@@ -172,7 +190,9 @@ if __name__ == "__main__":
             
             
             if(check == 1):
-                values = get_values(read_channel)
+                values = get_values(read_channel,2)
+                user = get_values(read_channel,3)
+                name = user["name"]
                 colors = values["color"]
                 intensity = values["intensity"]
                 iterations = values["iterations"]
@@ -197,17 +217,14 @@ if __name__ == "__main__":
                     
                     time.sleep(10)
                     
-            print(diameter_1)
-            
-            diameter_list.update({"red":diameter_1})
-            diameter_list.update({"green":diameter_2})
-            diameter_list.update({"blue":diameter_3})
-            diameter_list.update({"yellow":diameter_4})
-            diameter_list.update({"white":diameter_5})
+            encrypt_diameter_1 = encrypt(str(diameter_1),key,iv)
+            encrypt_diameter_2 = encrypt(str(diameter_2),key,iv)
+            encrypt_diameter_3 = encrypt(str(diameter_3),key,iv)
+            encrypt_diameter_4 = encrypt(str(diameter_4),key,iv)
+            encrypt_diameter_5 = encrypt(str(diameter_5),key,iv)
             
             
-            response = write_channel.update({'field1':0, 'field3':str(diameter_list)})
-            diameter = {}    
+            response = write_channel.update({'field1':0, 'field3':name, 'field4':str(encrypt_diameter_1), 'field5':str(encrypt_diameter_2), 'field6':str(encrypt_diameter_3), 'field7':str(encrypt_diameter_4), 'field8':str(encrypt_diameter_5)})
          
                     
                 
