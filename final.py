@@ -18,7 +18,7 @@ hz = 75
 key = 'sreehaachapra123' #16 char for AES128
 
 #FIX IV
-iv = 'jansarannathi123' #16 char for AES128
+iv = 'jansarannathi123'.encode('utf-8') #16 char for AES128
 
 
 
@@ -127,7 +127,7 @@ def pupilDiameter(color, duration):
     except:
         print("Error")
         
-def encrypt(data,key,iv):
+def encrypt(data):
         data= pad(data.encode(),16)
         cipher = AES.new(key.encode('utf-8'),AES.MODE_CBC,iv)
         return base64.b64encode(cipher.encrypt(data))
@@ -225,11 +225,11 @@ if __name__ == "__main__":
             diameter_dic_5 = {"white": diameter_5}
             
                     
-            encrypt_diameter_1 = encrypt(str(diameter_dic_1),key,iv)
-            encrypt_diameter_2 = encrypt(str(diameter_dic_2),key,iv)
-            encrypt_diameter_3 = encrypt(str(diameter_dic_3),key,iv)
-            encrypt_diameter_4 = encrypt(str(diameter_dic_4),key,iv)
-            encrypt_diameter_5 = encrypt(str(diameter_dic_5),key,iv)
+            encrypt_diameter_1 = encrypt(str(diameter_dic_1))
+            encrypt_diameter_2 = encrypt(str(diameter_dic_2))
+            encrypt_diameter_3 = encrypt(str(diameter_dic_3))
+            encrypt_diameter_4 = encrypt(str(diameter_dic_4))
+            encrypt_diameter_5 = encrypt(str(diameter_dic_5))
             
             
             response = write_channel.update({'field1':0, 'field3':name, 'field4':str(encrypt_diameter_1), 'field5':str(encrypt_diameter_2), 'field6':str(encrypt_diameter_3), 'field7':str(encrypt_diameter_4), 'field8':str(encrypt_diameter_5)})
