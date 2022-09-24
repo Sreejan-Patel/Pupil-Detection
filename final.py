@@ -86,12 +86,10 @@ def pupilDiameter(color, duration):
                             
                             if(i[2]>0 and i[2]<155):
                                 cv2.circle(roi_color2,(int(i[0]),int(i[1])),int(i[2]),(0,0,255),1)
-                                # cv2.putText(img,"Pupil Pos:",(450,30), font, 1,(0,0,255),2,cv2.LINE_AA)
-                                # cv2.putText(img,"X "+str(int(i[0]))+" Y "+str(int(i[1])),(430,60), font, 1,(0,0,255),2,cv2.LINE_AA)
+                                cv2.putText(img,"Pupil Pos:",(450,30), font, 1,(0,0,255),2,cv2.LINE_AA)
+                                cv2.putText(img,"X "+str(int(i[0]))+" Y "+str(int(i[1])),(430,60), font, 1,(0,0,255),2,cv2.LINE_AA)
                                 d = (int(i[2])*2.0)
                                 dmm = 1/(25.4/d)
-                                dmm = float(int(dmm*1000))
-                                dmm /= 1000
                                 if(color == 1):
                                     diameter_1.append(dmm)
                                 elif(color == 2):
@@ -105,7 +103,7 @@ def pupilDiameter(color, duration):
                                 
                                 
                                     
-                                # cv2.putText(img,str('{0:.2f}'.format(dmm))+"mm",(10,60), font, 1,(0,0,255),2,cv2.LINE_AA)
+                                cv2.putText(img,str('{0:.2f}'.format(dmm))+"mm",(10,60), font, 1,(0,0,255),2,cv2.LINE_AA)
                                 cv2.circle(roi_color2,(int(i[0]),int(i[1])),2,(0,0,255),3)
                     except Exception as e:
                         pass
@@ -116,7 +114,7 @@ def pupilDiameter(color, duration):
                     if blink==True:
                          cv2.putText(img,"Blink",(10,90), font, 1,(0,0,255),2,cv2.LINE_AA)
                 a="Eye Close" 
-                # cv2.putText(img,a,(10,30), font, 1,(0,0,255),2,cv2.LINE_AA)
+                cv2.putText(img,a,(10,30), font, 1,(0,0,255),2,cv2.LINE_AA)
                 
             cv2.imshow('img',img)
             k = cv2.waitKey(30) & 0xff
