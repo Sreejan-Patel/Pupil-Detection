@@ -230,7 +230,7 @@ if __name__ == "__main__":
             encrypt_diameter_5 = encrypt(str(diameter_dic_5))
             
             
-            response = write_channel.update({'field1':0, 'field3':name, 'field4':encrypt_diameter_1.decode("utf-8", "ignore"), 'field5':encrypt_diameter_2.decode("utf-8", "ignore"), 'field6':encrypt_diameter_3.decode("utf-8", "ignore"), 'field7':encrypt_diameter_4.decode("utf-8", "ignore"), 'field8':encrypt_diameter_5.decode("utf-8", "ignore")})
+            response = write_channel.update({'field1':0, 'field2':name, 'field4':encrypt_diameter_1.decode("utf-8", "ignore"), 'field5':encrypt_diameter_2.decode("utf-8", "ignore"), 'field6':encrypt_diameter_3.decode("utf-8", "ignore"), 'field7':encrypt_diameter_4.decode("utf-8", "ignore"), 'field3':encrypt_diameter_5.decode("utf-8", "ignore")})
          
                     
                 
