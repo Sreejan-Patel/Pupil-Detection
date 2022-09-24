@@ -37,8 +37,13 @@ green = GPIO.PWM(22, int(hz))      # create object green for PWM on port 2
 blue = GPIO.PWM(37, int(hz))      # create object blue for PWM on port 22
 
 channel_id = 1850502  # put here the ID of the channel you created before
-write_key = 'U22K59XZQ3MDYUOT' # update the "WRITE KEY"
+write_key = 'U22K59XZQ3MDYUOT'
 read_key = '3ZEF0QV0PHCA8TAC'
+
+
+channel_id_val = 1871939
+write_key_val = 'TLANZNS5J12MS789' # update the "WRITE KEY"
+read_key_val = 'ARVJZZ6E18F7H6JU'
 
 
 diameter_1 = []
@@ -175,6 +180,9 @@ if __name__ == "__main__":
         write_channel = thingspeak.Channel(id=channel_id, api_key=write_key)
         read_channel = thingspeak.Channel(id=channel_id, api_key=read_key, fmt = 'json')
         
+        write_channel_val = thingspeak.Channel(id=channel_id_val, api_key=write_key_val)
+        read_channel_val = thingspeak.Channel(id=channel_id_val, api_key=read_key_val, fmt = 'json')
+        
         while True:
             diameter_1 = []
             diameter_2 = []
@@ -182,15 +190,15 @@ if __name__ == "__main__":
             diameter_4 = []
             diameter_5 = []
             name = ''
-            check = check_start(write_channel)
+            check = check_start(read_channel_val)
             if(check == 0):
                 time.sleep(15)
                 continue
             
             
             if(check == 1):
-                values = get_values(read_channel,2)
-                user = get_values(read_channel,3)
+                values = get_values(read_channel_val,2)
+                user = get_values(read_channel_val,3)
                 name = user["name"]
                 colors = values["color"]
                 intensity = values["intensity"]
@@ -223,14 +231,16 @@ if __name__ == "__main__":
             diameter_dic_5 = {"white": diameter_5}
             
                     
-            encrypt_diameter_1 = encrypt(str(diameter_dic_1))
-            encrypt_diameter_2 = encrypt(str(diameter_dic_2))
-            encrypt_diameter_3 = encrypt(str(diameter_dic_3))
-            encrypt_diameter_4 = encrypt(str(diameter_dic_4))
-            encrypt_diameter_5 = encrypt(str(diameter_dic_5))
+            # encrypt_diameter_1 = encrypt(str(diameter_dic_1))
+            # encrypt_diameter_2 = encrypt(str(diameter_dic_2))
+            # encrypt_diameter_3 = encrypt(str(diameter_dic_3))
+            # encrypt_diameter_4 = encrypt(str(diameter_dic_4))
+            # encrypt_diameter_5 = encrypt(str(diameter_dic_5))
             
+            response_val = write_channel_val.update({'field1': 0})
+            response = write_channel.update({'field1': str(diameter_dic_1), 'field2': str(diameter_dic_2), 'field3': str(diameter_dic_3), 'field4': str(diameter_dic_4), 'field5': str(diameter_dic_5), 'field6': name})
             
-            response = write_channel.update({'field1':0, 'field2':name, 'field4':encrypt_diameter_1.decode("utf-8", "ignore"), 'field5':encrypt_diameter_2.decode("utf-8", "ignore"), 'field6':encrypt_diameter_3.decode("utf-8", "ignore"), 'field7':encrypt_diameter_4.decode("utf-8", "ignore"), 'field3':encrypt_diameter_5.decode("utf-8", "ignore")})
+            # response = write_channel.update({'field1':0, 'field2':name, 'field3':encrypt_diameter_5.decode("utf-8", "ignore"), 'field4':encrypt_diameter_1.decode("utf-8", "ignore"), 'field5':encrypt_diameter_2.decode("utf-8", "ignore"), 'field6':encrypt_diameter_3.decode("utf-8", "ignore"), 'field7':encrypt_diameter_4.decode("utf-8", "ignore")})
          
                     
                 
