@@ -63,8 +63,7 @@ def get_frames(color, duration):
     try:
         while 1:
             ret, img = cap.read()
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            frames.append(gray)
+            frames.append(img)
             count += 1
             if count == total_frames:
                 break
